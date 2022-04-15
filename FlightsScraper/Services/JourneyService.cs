@@ -27,7 +27,7 @@ namespace FlightsScraper.Services
         public List<JourneyModel> GetCheapestFlights(List<JourneyModel> roundtripFlights)
         {
             float lowestPrice = GetLowestPrice(roundtripFlights);
-            var cheapestFlights = roundtripFlights.Where(x => x.price == lowestPrice).ToList();
+            var cheapestFlights = roundtripFlights.Where(x => x.Price == lowestPrice).ToList();
             return cheapestFlights;
         }
 
@@ -116,7 +116,7 @@ namespace FlightsScraper.Services
         {
             if (journeys.Count == 0)
                 return 0;
-            float minPrice = journeys.Min(x => x.price);
+            float minPrice = journeys.Min(x => x.Price);
             return minPrice;
         }
 

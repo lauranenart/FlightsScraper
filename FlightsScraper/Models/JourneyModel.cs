@@ -8,31 +8,31 @@ namespace FlightsScraper.Models
 {
     public class JourneyModel
     {
-        public List<FlightModel> flights { get; set; }
-        public float price { get; set; }
-        public float taxes { get; set; }
+        public List<FlightModel> Flights { get; set; }
+        public float Price { get; set; }
+        public float Taxes { get; set; }
 
         public JourneyModel(List<FlightModel> flights, float price, float taxes)
         {
-            this.flights = flights;
-            this.price = price;
-            this.taxes = taxes;
+            Flights = flights;
+            Price = price;
+            Taxes = taxes;
         }
 
         public static JourneyModel operator +(JourneyModel journeyFirst, JourneyModel journeySecond)
         {
-            var newPrice = journeyFirst.price > journeySecond.price? journeyFirst.price : journeySecond.price;
-            var newTaxes = journeyFirst.taxes + journeySecond.taxes;
+            var newPrice = journeyFirst.Price > journeySecond.Price ? journeyFirst.Price : journeySecond.Price;
+            var newTaxes = journeyFirst.Taxes + journeySecond.Taxes;
             
-            List<FlightModel> newFlightsList = journeyFirst.flights.Concat(journeySecond.flights).ToList();
+            List<FlightModel> newFlightsList = journeyFirst.Flights.Concat(journeySecond.Flights).ToList();
 
             return new JourneyModel(newFlightsList, newPrice, newTaxes);
         }
 
         public override string ToString()
         {
-            string journeyString = price + "," + taxes.ToString("0.00"); ;
-            foreach (FlightModel flight in flights)
+            string journeyString = Price + "," + Taxes.ToString("0.00"); ;
+            foreach (FlightModel flight in Flights)
             {
                 journeyString += "," + flight.ToString();
             }
