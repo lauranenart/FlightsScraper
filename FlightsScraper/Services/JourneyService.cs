@@ -93,6 +93,9 @@ namespace FlightsScraper.Services
         {
             List<JourneyModel> roundtripFlights = new List<JourneyModel>();
 
+            if (!outboundFlights.Any() || !inboundFlights.Any())
+                return roundtripFlights;
+
             foreach (var outboundFlight in outboundFlights)
             {
                 foreach (var inboundFlight in inboundFlights)
