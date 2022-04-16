@@ -33,9 +33,11 @@ namespace FlightsScraper.Repositories
                             var jsonHeaderBody = JObject.Parse(content);
                             jsonBody = (JObject)jsonHeaderBody.SelectToken("body.data");
                         }
+                        else
+                            throw new KeyNotFoundException($"Not found: {content}");
                     }
                     else
-                        throw new HttpRequestException($"Http request failed with status: {httpStatus}");
+                        throw new HttpRequestException($"Http request failed: {httpStatus}");
                     return jsonBody;
                 }
                 catch(InvalidOperationException) { throw; }

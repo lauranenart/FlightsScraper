@@ -27,16 +27,21 @@ namespace FlightsScraper.Services
             return dataObj;
         }
 
-        public List<FlightModel> CreateFlights(JObject journey, int connections = 1, string connectionAirport = "")
+        public List<FlightModel> CreateFlights(JObject journey, Connection connections = Connection.All, string connectionAirport = "")
         {
             List<FlightModel> flights = new List<FlightModel>();
             var flightsJArr = helper.GetListByToken(journey, "flights");
 
-            if (flightsJArr.Count == connections + 1 && connectionAirport != "")
+            if(connections is Connection.NonDirect && flightsJArr.Count == (int)connections + 1)
             {
                 AddFlightsWithConnAirport(flightsJArr, connectionAirport, ref flights);
             }
-            else if (flightsJArr.Count <= connections + 1)
+            else if(connections is Connection.Direct && flightsJArr.Count == (int)connections + 1)
+            {
+                FlightModel model = GetFlight(flightsJArr.First());
+                flights.Add(model);
+            }
+            else if(connections is Connection.All & flightsJArr.Count <= (int)connections) 
             {
                 foreach (var flight in flightsJArr)
                 {
@@ -50,13 +55,27 @@ namespace FlightsScraper.Services
 
         private void AddFlightsWithConnAirport(List<JObject> flightsJArr, string connectionAirport, ref List<FlightModel> flights)
         {
-            FlightModel flightFirst = GetFlight(flightsJArr.First());
-            FlightModel flightLast = GetFlight(flightsJArr.Last());
+            bool toAdd = true;
 
-            if (flightFirst.AirportArrivCode.Equals(flightLast.AirportDepartCode) && flightFirst.AirportArrivCode.Equals(connectionAirport))
+            if (String.IsNullOrEmpty(connectionAirport)) 
+                goto add;
+
+            for(int i = 0; i < flightsJArr.Count - 1; ++i)
             {
-                flights.Add(flightFirst);
-                flights.Add(flightLast);
+                FlightModel flightFirst = GetFlight(flightsJArr[i]);
+                FlightModel flightSecond = GetFlight(flightsJArr[i + 1]);
+
+                if (!flightFirst.AirportArrivCode.Equals(flightSecond.AirportDepartCode) || !flightFirst.AirportArrivCode.Equals(connectionAirport))
+                {
+                    toAdd = false;
+                }
+            }
+
+            add:
+            if (toAdd)
+            {
+                foreach(var flight in flightsJArr)
+                    flights.Add(GetFlight(flight));
             }
         }
 
