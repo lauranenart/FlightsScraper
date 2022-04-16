@@ -55,10 +55,7 @@ namespace FlightsScraper.Services
         {
             var prices = new List<Tuple<int, float>>();
 
-            if (jsonObj is null)
-                return prices;
-
-            var availabilities = helper.GetValueByToken<JArray>(jsonObj, "totalAvailabilities");
+            var availabilities = helper.GetListByToken(jsonObj, "totalAvailabilities");
 
             foreach (var availability in availabilities)
             {
@@ -95,6 +92,9 @@ namespace FlightsScraper.Services
         private List<JourneyModel> MakeRoundtripCombinations(List<JourneyModel> outboundFlights, List<JourneyModel> inboundFlights)
         {
             List<JourneyModel> roundtripFlights = new List<JourneyModel>();
+
+            if (!outboundFlights.Any() || !inboundFlights.Any())
+                return roundtripFlights;
 
             foreach (var outboundFlight in outboundFlights)
             {

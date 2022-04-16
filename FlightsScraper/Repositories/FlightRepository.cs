@@ -25,11 +25,17 @@ namespace FlightsScraper.Repositories
 
                     if (httpStatus == System.Net.HttpStatusCode.OK)
                     {
-                        var content = await response.Content.ReadAsStringAsync(); 
-                        var jsonHeaderBody = JObject.Parse(content);
+                        var contentType = response.Content.Headers.ContentType.MediaType;
+                        var content = await response.Content.ReadAsStringAsync();
 
-                        jsonBody = (JObject)jsonHeaderBody.SelectToken("body.data");
+                        if (contentType.Contains("application/json"))
+                        {
+                            var jsonHeaderBody = JObject.Parse(content);
+                            jsonBody = (JObject)jsonHeaderBody.SelectToken("body.data");
+                        }
                     }
+                    else
+                        throw new HttpRequestException($"Http request failed with status: {httpStatus}");
                     return jsonBody;
                 }
                 catch(InvalidOperationException) { throw; }
