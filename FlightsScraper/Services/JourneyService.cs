@@ -9,6 +9,12 @@ using System.Threading.Tasks;
 
 namespace FlightsScraper.Services
 {
+    public enum Connection
+    {
+        Direct,
+        NonDirect,
+        All
+    }
     public class JourneyService
     {
 
@@ -31,7 +37,7 @@ namespace FlightsScraper.Services
             return cheapestFlights;
         }
 
-        public List<JourneyModel> GetRoundtripFlights(string fromDest, string toDest, string departDate, string returnDate, int connections = 1, string connectionAirport = "")
+        public List<JourneyModel> GetRoundtripFlights(string fromDest, string toDest, string departDate, string returnDate, Connection connections = Connection.All, string connectionAirport = "")
         {
             List<JourneyModel> roundtripFlights = new List<JourneyModel>();
             try
@@ -66,7 +72,7 @@ namespace FlightsScraper.Services
             return prices;
         }
 
-        private List<JourneyModel> CreateJourneysByDirect(List<JObject> journeys, string direction, List<Tuple<int, float>> availablePrices, int connections = 1, string connectionAirport = "")
+        private List<JourneyModel> CreateJourneysByDirect(List<JObject> journeys, string direction, List<Tuple<int, float>> availablePrices, Connection connections = Connection.All, string connectionAirport = "")
         {
             var journeysByDirect = journeys.Where(journey => (helper.GetValueByToken<string>(journey, "direction"))
             .Equals(direction)).ToList();
@@ -82,10 +88,12 @@ namespace FlightsScraper.Services
 
                 List<FlightModel> flights = service.CreateFlights(journeyJObj, connections, connectionAirport);
 
-                JourneyModel journeyModel = new JourneyModel(flights, price, taxes);
-                journeysList.Add(journeyModel);
+                if (flights.Any())
+                {
+                    JourneyModel journeyModel = new JourneyModel(flights, price, taxes);
+                    journeysList.Add(journeyModel);
+                }
             }
-
             return journeysList;
         }
 
