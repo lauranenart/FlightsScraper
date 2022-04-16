@@ -31,7 +31,9 @@ class Program
             var cheapestFlights = service.GetCheapestFlights(roundtripFlights);
             FileHelper.ExportToCsvFile(cheapestFlights, fromDest, toDest, departDate, returnDate, connections);
         }
-        catch (Exception ex) { Console.WriteLine(ex.Message); }
+        catch (Exception ex) {
+            Console.WriteLine($"With input: {fromDest} {toDest} {departDate} {returnDate}, {ex.Message}"); 
+        }
         
     }
 }
