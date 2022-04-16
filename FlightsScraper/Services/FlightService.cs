@@ -41,7 +41,7 @@ namespace FlightsScraper.Services
                 FlightModel model = GetFlight(flightsJArr.First());
                 flights.Add(model);
             }
-            else if(connections is Connection.All & flightsJArr.Count <= (int)connections) 
+            else if(connections is Connection.All & flightsJArr.Count <= (int)connections)
             {
                 foreach (var flight in flightsJArr)
                 {

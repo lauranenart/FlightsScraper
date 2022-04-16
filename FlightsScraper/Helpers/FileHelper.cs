@@ -13,7 +13,7 @@ namespace FlightsScraper.Helpers
 {
     public class FileHelper
     {
-        public static void ExportToCsvFile(List<JourneyModel> roundtripFlights, string fromDest, string toDest, string departDate, string returnDate, int connections = 1)
+        public static void ExportToCsvFile(List<JourneyModel> roundtripFlights, string fromDest, string toDest, string departDate, string returnDate, int connections)
         {
             var filename = $"{fromDest}-{toDest}_({departDate})-({returnDate}).csv";
             var path = GetFullPath(filename);

@@ -35,13 +35,16 @@ class Program
             var roundtripFlights = service.GetRoundtripFlights(fromDest, toDest, departDate, returnDate, connections, connectionAirport);
             var cheapestFlights = service.GetCheapestFlights(roundtripFlights);
 
-            int count = connections is Connection.Direct ? 0 : 1;
-            FileHelper.ExportToCsvFile(cheapestFlights, fromDest, toDest, departDate, returnDate, count);
+            FileHelper.ExportToCsvFile(cheapestFlights, fromDest, toDest, departDate, returnDate, GetConnCount(connections));
         }
         catch (Exception ex) {
             Console.WriteLine($"With input: {fromDest} {toDest} {departDate} {returnDate}, {ex.Message}"); 
         }
-        
+    }
+
+    private static int GetConnCount(Connection connections = Connection.All)
+    {
+        return connections is Connection.Direct ? 0 : 1;
     }
 }
 
